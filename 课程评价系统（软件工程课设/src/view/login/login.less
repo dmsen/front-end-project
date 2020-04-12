@@ -1,0 +1,99 @@
+input:-webkit-autifill {
+  box-shadow: 0 0 0 38px white inset !important;
+}
+
+#particleBackground {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  outline: none;
+}
+
+.loginForm {
+  position: absolute;
+  text-align: center;
+  top: 4%;
+  right: 15%;
+}
+.registerForm {
+  position: absolute;
+  text-align: center;
+  top: 4%;
+  right: 20%;
+  //color: yellow;
+  //margin: 0 auto;
+  //margin-top: 4%;
+
+}
+//.registerForm >>> .formItemStyle{
+//  color: white;
+//}
+
+.formItemStyle{
+  color: red;
+  float: left;
+  margin-left: 15px
+}
+
+.formItemInputStyle{
+  width: 300px;margin-left: 40px
+}
+
+.headImg {
+  width: 100%;
+  height: 100%;
+}
+
+#three {
+  display: block;
+  width: 170px;
+  height: 170px;
+  background-color: #ccc;
+}
+
+.formContext {
+  display: block;
+  margin-left: 30px;
+  margin-top: 210px;
+  width: 420px;
+  height: 140px;
+}
+
+.inputStyle {
+  margin: 12px 20px 0 20px;
+  width: 340px;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+#login {
+  animation: fade-in;
+  animation-duration: 1.5s;
+  -webkit-animation: fade-in 1.5s;
+}

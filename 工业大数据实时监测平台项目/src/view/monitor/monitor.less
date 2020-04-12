@@ -1,0 +1,56 @@
+.boxBorder {
+  border: 1px dashed #eee;
+  border-radius: 4px;
+  margin: -10px;
+  padding: 10px;
+}
+
+.spinnerNormal {
+  animation: spinner 4s linear infinite;
+  height: 6.8em;
+  width: 4.8em;
+}
+
+.spinnerExceptionLevel1 {
+  animation: spinner 2.5s linear infinite;
+  height: 3.6em;
+  width: 3.6em;
+}
+
+.spinnerExceptionLevel2 {
+  animation: spinner 5s linear infinite;
+  height: 3.6em;
+  width: 3.6em;
+}
+
+.spinnerExceptionLevel3 {
+  animation: spinner 10s linear infinite;
+  height: 3.6em;
+  width: 3.6em;
+}
+
+.rotationStop {
+  height: 3.6em;
+  width: 3.6em;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(360deg)
+  }
+
+  100% {
+    transform: rotate(0deg)
+  }
+}
+
+.count-style {
+  font-size: 50px;
+}
+
+.spanStyle {
+  font-size: 15px;
+  font-family: 黑体;
+  font-weight: bold;
+
+}
