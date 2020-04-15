@@ -16,10 +16,7 @@
       <Col span="3">
         <Button style="margin: 10px 0;" type="primary" @click="exportExcel">导出为Csv文件</Button>
       </Col>
-      <!--<Col span="5">-->
-        <!--<Button style="margin: 10px 0 10px 5px;" type="default" @click="showAddUser">增加用户</Button>-->
-      <!--</Col>-->
-      <Col span = "13" offset = "8" style="text-align: right">
+      <Col span = "13" offset = "7" style="text-align: right">
         <Page :total="dataLength" :current="currentPages" size="small" show-elevator  :page-size ="10" @on-change="changePages" show-total/>
       </Col>
     </Row>
@@ -80,11 +77,6 @@
         <FormItem label="通知内容:">
           <Input type="textarea" placeholder="content" v-model="noticeItem.content"></Input>
         </FormItem>
-        <!--<FormItem label="评级">-->
-          <!--<Rate show-text allow-half v-model="noticeItem.rate">-->
-            <!--<span style="color: #f5a623">{{ noticeItem.rate }}</span>-->
-          <!--</Rate>-->
-        <!--</FormItem>-->
         <p style="text-align: center"> <Button  type="primary" @click="handleSubmitNotice">提交</Button></p>
       </Form>
       <div slot="footer">
@@ -110,9 +102,9 @@ export default {
       }
     };
     let pwdCheckValidate = (rule, value, callback) => {
-      if (this.formItem.password != "" && value === "") {
+      if (this.formItem.password !== "" && value === "") {
         callback(new Error("密码不能为空"));
-      } else if (this.formItem.password != value) {
+      } else if (this.formItem.password !== value) {
         callback(new Error("两次密码不一致"));
       } else {
         callback();
@@ -151,7 +143,6 @@ export default {
       },
       columns: [
         { title: "用户名称", key: "name" },
-        // { title: "职位", key: "role" },
         { title: "权限", key: "level" },
         { title: "是否离职/在校", key: "status" },
         { title: "未读通知数", key: "wNotice" },
@@ -163,24 +154,6 @@ export default {
           button: [
             (h, params, vm) => {
               return h("div", [
-                // h(
-                //   "Button",
-                //   {
-                //     props: {
-                //       type: "primary",
-                //       size: "small"
-                //     },
-                //     style: {
-                //       marginRight: "10px"
-                //     },
-                //     on: {
-                //       click: () => {
-                //         this.showChangeUser(params);
-                //       }
-                //     }
-                //   },
-                //   "修改"
-                // ),
                 h(
                   "Poptip",
                   {
@@ -245,7 +218,7 @@ export default {
   },
   watch: {
     passwordCleck(newVal, oldVal) {
-      if (newVal == this.addForm.password) {
+      if (newVal === this.addForm.password) {
         this.addForm.passwordLand = false;
         console.log(this.addForm.passwordLand);
       } else {
@@ -258,15 +231,6 @@ export default {
           this.showModal = true;
           this.noticeItem.hutUserId = this.tableData[param.index].id;
           this.noticeItem.hutUserName = this.tableData[param.index].name;
-          console.log(this.noticeItem)
-          // this.formItem.isAdd = false;
-          // const { hutCourseId, hutCourseName, hutCourseDescribe ,hutCourseTeacher} = this.tableData[param.index];
-          // console.log(this.tableData[param.index]);
-          // this.formItem.hutCourseName = hutCourseName;
-          // this.formItem.hutCourseDescribe = hutCourseDescribe;
-          // this.formItem.hutCourseTeacher = hutCourseTeacher;
-          // this.formItem.hutCourseId = hutCourseId;
-          // this.shouCard = true
       },
       async handleSubmitNotice() {
           const _this = this;
@@ -291,28 +255,23 @@ export default {
                   for(var k in o){
                       if(new RegExp("("+ k +")").test(fmt)){
                           fmt = fmt.replace(
-                              RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+                              RegExp.$1, (RegExp.$1.length===1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
                       }
                   }
 
                   return fmt;
               };
               const evaDate = new Date().format("yyyy-MM-dd hh:mm:ss");
-              console.log("提交评价");
-              console.log(evaDate,this.noticeItem);
               const  res = await  noticeSub({
                   hutUserId,userName,content,evaDate
               });
               if(res.data.result ===1){
                   _this.$Message.error(res.data.msg)
               }else {
-                  _this.$Message.success("感谢您的宝贵评价，可前往首页查看您的评价")
+                  _this.$Message.success("已对该用户下达通知");
+                  _this.showModal = false;
               }
-              console.log(res)
-
-
           } catch (err) {
-              console.log(err);
               if (err.response !== undefined) {
                   this.$Message.error(err.response.status);
               } else {
@@ -324,22 +283,15 @@ export default {
           return ("用户：" + this.$store.state.user.userName)
       },
       changePages(val){
-          this.currentPages =  val
-          console.log(this.currentPages)
+          this.currentPages =  val;
           this.getUsers();
-          // console.log(val)
       },
     async handleDelete(params) {
       const _this = this;
       const id = this.tableData[params.index].id;
       const userId = this.$store.state.user.userId;
-
-      // console.log(id,userId);
       try {
         const deleteRes = await deleteUser({ id ,userId });
-        console.log("删除");
-          console.log(deleteRes);
-        console.log(deleteRes.data.result);
           if(deleteRes.data.result ===1){
               _this.$Message.error(deleteRes.data.msg);
           }else {
@@ -356,20 +308,18 @@ export default {
     },
     async getUsers() {
       try {
-          const sendPage = this.currentPages
+        const sendPage = this.currentPages;
         const userList = await getUsers({sendPage});
-          // console.log(this.$store.state.user.token);
-          console.log("获取");
-        console.log(userList,userList.data.allDateLength,this.currentPages);
         this.tableData = [];
         this.dataLength = userList.data.allDateLength;
         for (let i = 0, length = userList.data.msg.length; i < length; i++) {
           this.tableData.push({
             id: userList.data.msg[i].id,
             name: userList.data.msg[i].userName,
-              level: userList.data.msg[i].level === 0 ? "超级管理员" : userList.data.msg[i].level === 1 ? "管理员" : userList.data.msg[i].level === 2 ? "用户":"游客" ,
+            level: userList.data.msg[i].level === 0 ? "超级管理员" : userList.data.msg[i].level === 1 ? "管理员" : userList.data.msg[i].level === 2 ? "用户":"游客" ,
             remark: userList.data.msg[i].remarks,
-            status: userList.data.msg[i].status ===1 ? "在校" : "离校"
+            status: userList.data.msg[i].status ===1 ? "在校" : "离校",
+            wNotice:userList.data.msg[i].num.toString()
           });
         }
       } catch (err) {
@@ -380,22 +330,6 @@ export default {
         }
       }
     },
-    // showAddUser() {
-    //   this.handleUser = true;
-    // },
-    // showChangeUser(param) {
-    //   this.formItem.isAdd = false;
-    //   const { id, jurisdiction, name, remark, role, status } = this.tableData[
-    //     param.index
-    //   ];
-    //   this.formItem.name = name;
-    //   this.formItem.id = id;
-    //   this.formItem.jurisdiction = jurisdiction;
-    //   this.formItem.role = role;
-    //   this.formItem.remark = remark;
-    //   this.formItem.status = status === "离职" ? 1 : 0;
-    //   this.handleUser = true;
-    // },
     handleCancel() {
       this.handleUser = false;
       this.formItem = {
@@ -432,7 +366,6 @@ export default {
             role,
             status
           });
-          console.log(addRes)
             if(addRes.data.result === 1)
             {
                 _this.$Message.error(addRes.data.msg);

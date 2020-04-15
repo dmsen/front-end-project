@@ -45,7 +45,7 @@ export default [{
       meta: {
         hideInMenu: false,
         title: '首页',
-        icon: 'md-home'
+        icon: 'md-home',
       },
       component: () => import('@/view/home/home.vue')
     }]
@@ -64,19 +64,12 @@ export default [{
     },
     component: Main,
     children: [
-      //   {
-      //   path: 'mine',
-      //   name: 'mine',
-      //   meta: {
-      //     title: '个性化'
-      //   },
-      //   component: () => import('@/view/user/set.vue')
-      // },
         {
         path: 'management',
         name: 'management',
         meta: {
-          title: '用户管理'
+          title: '用户管理',
+            access: [1,0,2],
         },
         component: () => import('@/view/user/management.vue')
       },
@@ -91,31 +84,24 @@ export default [{
     ]
   },
   {
-    path: '/equipment',
-    name: 'equipment',
+    path: '/course',
+    name: 'course',
     meta: {
       icon: 'ios-settings',
       title: '课程管理',
       hideInMenu: sessionStorage.getItem('macMenuLand') ? true : false,
       showAlways: true,
-      access: [1,0],
+      access: [1,0,2],
     },
     component: Main,
     children: [{
         path: 'courseMessage',
         name: 'courseMessage',
         meta: {
-          title: '课程信息'
+            title: '课程信息',
+            access: [1,0,2],
         },
-        component: () => import('@/view/equipment/courseMessage.vue')
-      },
-      {
-        path: 'mac',
-        name: 'mac',
-        meta: {
-          title: '********'
-        },
-        component: () => import('@/view/equipment/mac.vue')
+        component: () => import('@/view/course/courseMessage.vue')
       },
     ]
   },

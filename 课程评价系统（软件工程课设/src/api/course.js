@@ -90,12 +90,12 @@ export const evalateSub = ({
 /**
  * @description 获取最新的课程评价
  */
-export const handGetEvl = ( ) => {
+export const handGetEvl = (sendPage) => {
     return axios.request({
         url: 'hutCourse/evlGet',
         method: 'post',
         data:{
-            sendPage:1,
+            sendPage:sendPage,
         }
 
     })

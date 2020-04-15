@@ -45,19 +45,19 @@ export const getUserImage = () => {
     return localStorage.getItem('avatorImgPath')
 }
 export const setUserId = (userId) => {
-  sessionStorage.setItem('userId', userId)
+    localStorage.setItem('userId', userId)
 }
 
 export const setUserName = (userName) => {
-  sessionStorage.setItem('userName', userName)
+    localStorage.setItem('userName', userName)
 }
 
 export const getUserId = () => {
-  return sessionStorage.getItem('userId')
+  return localStorage.getItem('userId')
 }
 
 export const getUserName = () => {
-  return sessionStorage.getItem('userName')
+  return localStorage.getItem('userName')
 }
 
 export const setToken = (token) => {

@@ -15,6 +15,7 @@ import echarts from 'echarts'
 // import * as sock from "@/api/sock.js"
 // Vue.prototype.socketApi = sock
 import './theme/dark.less'
+
 // require('@/theme/dark.less')
 Vue.use(VueParticles);
 

@@ -143,17 +143,46 @@ export const noticeSub = ({
 /**
  * @description 获取用户对应的通知
  */
-export const getNotice = (  {userId}) => {
+export const getNotice = (  {userId,sendPage}) => {
     return axios.request({
         url: 'hutUser/getNotice',
         method: 'post',
         data:{
-            userId:userId
+            userId:userId,
+            sendPage:sendPage
         }
 
     })
 };
 
+/**
+ * @description 标记用户已读的通知
+ */
+export const readNotice = (  {id}) => {
+    return axios.request({
+        url: 'hutUser/readNotice',
+        method: 'post',
+        data:{
+            noticeId:id,
+        }
+
+    })
+};
+
+/**
+ * @description 获取用户已读的通知
+ */
+export const readEdNotice = (  {userId,sendPage}) => {
+    return axios.request({
+        url: 'hutUser/readEdNotice',
+        method: 'post',
+        data:{
+            userId:userId,
+            sendPage:sendPage
+        }
+
+    })
+};
 
 
 

@@ -31,9 +31,37 @@
           <div style="width: 600px;margin-left: 250px;font-weight: bold;font-size: 15px" v-show="noticeNone">
             暂无通知
           </div>
-          <Card v-for="(item,i) in noticeItem" :key=i>
-            用户名{{item.byPerson}}: 内容{{item.content}}:时间{{formateDate(item.time)}}
-          </Card>
+          <div v-show="noticeHave">
+            <!--<Card v-for="(item,i) in noticeItem" :key=i>-->
+              <!--用户名{{item.byPerson}}: 内容{{item.content}}:时间{{formateDate(item.time)}}-->
+              <!---->
+            <!--</Card>-->
+            <Collapse accordion >
+              <Panel  v-for="(item,i) in noticeItem" :key=i :hide-arrow="true">
+                <span style="font-weight: bold">用户名：{{item.byPerson}} </span><span style="float: right">{{formateDate(item.time)}}</span>
+                <!--<p slot="content">{{item.content}}</p>-->
+                <div  slot="content" style="margin-bottom: 5px" >
+                  <p style="word-break: break-all">
+                    {{item.content}}
+                    <Button style="float: right;margin-right: -15px;"  @click="readNotice(item.hutNoticeId)">标记已读</Button>
+                  </p>
+
+                </div>
+              </Panel>
+
+            </Collapse>
+            <Row style="margin-top: 16px">
+              <Col span="24">
+                <Button type="primary" @click="readEdNotice"> 查看已读消息</Button>
+                <Button type="primary" @click="getNoticeFuntion" style="margin-left: 10px"> 查看未读消息</Button>
+                <Page :total="dataLength" :current="currentPages" size="small" show-elevator  :page-size ="3" @on-change="changePages" show-total style="float: right;margin-top: 10px"/>
+              </Col>
+              <!--<Col span = "10" offset = "3"   >-->
+              <!--<Page :total="dataLength" :current="currentPages" size="small" show-elevator  :page-size ="3" @on-change="changePages" show-total/>-->
+              <!--</Col>-->
+            </Row>
+          </div>
+
           <div slot="footer">
             <span style="margin-right: 12px">若有问题请联系管理员</span>
           </div>
@@ -70,12 +98,12 @@
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <div class="tag-nav-wrapper">
-            <tags-nav
-              :value="$route"
-              @input="handleClick"
-              :list="tagNavList"
-              @on-close="handleCloseTag"
-            />
+            <!--<tags-nav-->
+              <!--:value="$route"-->
+              <!--@input="handleClick"-->
+              <!--:list="tagNavList"-->
+              <!--@on-close="handleCloseTag"-->
+            <!--/>-->
           </div>
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
@@ -103,7 +131,6 @@ import minLogo from "@/assets/images/lin.png";
 import maxLogo from "@/assets/images/lin_max_log.png";
 import "./main.less";
 import Tables from "_c/tables";
-// import { getNotice } from "@/api/user";
 import { Message } from "iview";
 export default {
   name: "Main",
@@ -120,11 +147,13 @@ export default {
   },
   data() {
     return {
-        noticeItem:{
-        },
+        dataLength:0,
+        currentPages:1,
+        noticeItem:null,
         noticeNone:false,
+        noticeHave:false,
         badgeModal:false,
-        badgeCount:100,
+        badgeCount:0,
         bOffset:[15,-5],
       columns: [
         { title: "编号", key: "customerId", sortable: true },
@@ -206,6 +235,10 @@ export default {
     }
   },
   methods: {
+      changePages(val){
+          this.currentPages =  val;
+          this.getNoticeFuntion()
+      },
       /**
        * 时间格式化，将时间格式转成字符串
        */
@@ -218,30 +251,81 @@ export default {
           let formatdatetime = d.getFullYear() + '-' + addDateZero(d.getMonth() + 1) + '-' + addDateZero(d.getDate()) + ' ' + addDateZero(d.getHours()) + ':' + addDateZero(d.getMinutes()) + ':' + addDateZero(d.getSeconds());
           return formatdatetime;
       },
-      ...mapActions(["handGetNotice",]),
-     showBadgeModal(){
-         this.badgeModal = true;
-         this.getNoticeFuntion()
-      },
-      async getNoticeFuntion(){
+      ...mapActions(["handGetNotice","handReadNotice","handReadEdNotice"]),
+      async readEdNotice(){
           const _this = this;
+          const sendPage = this.currentPages;
+          _this.noticeItem = null;
           try {
               const userId = _this.$store.state.user.userId;
-              const Res = await _this.handGetNotice(
-                  {userId}
+              const Res = await _this.handReadEdNotice(
+                  {userId,sendPage}
               );
               console.log(Res);
               if(Res.result === 1)
               {
                   _this.badgeCount = 0
-                  // _this.$Message.error(Res.msg);
 
               }else {
                   _this.noticeItem = Res.msg;
-                  _this.badgeCount = Res.msg.length
-                  // for(let i = 0;i<Res.msg.length;i++){
-                  //
-                  // }
+                  _this.badgeCount = Res.allDateLength;
+                  _this.dataLength = Res.allDateLength;
+              }
+
+          } catch (err) {
+              _this.$Message.error("未知错误"+err)
+          }
+      },
+      async readNotice(id){
+          const _this = this;
+          try {
+              const Res = await _this.handReadNotice(
+                  {id}
+              );
+              console.log(Res);
+              if(Res.result === 1)
+              {
+               _this.$Message.error("发生错误，请稍后再试")
+              }else {
+                  _this.$Message.success("操作成功");
+                  _this.getNoticeFuntion()
+              }
+
+          } catch (err) {
+              _this.$Message.error("未知错误"+err)
+          }
+      },
+     showBadgeModal(){
+          let that =this;
+         if(that.noticeItem === null){
+             that.noticeNone = true;
+             that.badgeModal = true;
+             that.noticeHave = false;
+         }else {
+             that.badgeModal = true;
+             that.noticeNone = false;
+             that.noticeHave = true;
+             that.getNoticeFuntion()
+         }
+      },
+      async getNoticeFuntion(){
+          const _this = this;
+          const sendPage = this.currentPages;
+          _this.noticeItem = null;
+          try {
+              const userId = _this.$store.state.user.userId;
+              const Res = await _this.handGetNotice(
+                  {userId,sendPage}
+              );
+              console.log(Res);
+              if(Res.result === 1)
+              {
+                  _this.badgeCount = 0
+
+              }else {
+                  _this.noticeItem = Res.msg;
+                  _this.badgeCount = Res.allDateLength;
+                  _this.dataLength = Res.allDateLength;
               }
 
           } catch (err) {
@@ -250,19 +334,6 @@ export default {
       },
     ...mapMutations(["setBreadCrumb", "setTagNavList", "addTag", "setLocal"]),
     ...mapActions(["handleLogin"]),
-    initWebSocket() {
-      this.socketApi.sendSock("3:", this.getSocketVal);
-    },
-    getSocketVal(e) {
-      // if (typeof e != Object) {
-      //   if (e > 0) {
-      //     this.$Message.error({
-      //       duration: 1,
-      //       content: "当前有异常数据！！！共" + e + "条"
-      //     });
-      //   }
-      // }
-    },
     turnToPage(route) {
       let { name, params, query } = {};
       if (typeof route === "string") name = route;
@@ -298,9 +369,6 @@ export default {
     handleClick(item) {
       this.turnToPage(item);
     },
-    handleClickWarn() {
-      this.showWarnModal = true;
-    }
   },
   watch: {
     $route(newRoute) {
@@ -318,14 +386,14 @@ export default {
     }
   },
   beforeMount() {
-    // this.initWebSocket();
-      this.getNoticeFuntion()
+
   },
   mounted() {
     /**
      * @description 初始化设置面包屑导航和标签导航
      */
-    this.showModal = this.$store.state.showModal;
+    this.getNoticeFuntion();
+    // this.showModal = this.$store.state.showModal;
     this.setTagNavList();
     this.addTag({
       route: this.$store.state.app.homeRoute

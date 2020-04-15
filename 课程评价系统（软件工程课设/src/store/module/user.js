@@ -1,6 +1,6 @@
 import {
   login,
-  logout, updataUser,updataPersonUser,changeHutUserTou,getNotice
+  logout, updataUser,updataPersonUser,changeHutUserTou,getNotice,readNotice,readEdNotice
 } from '@/api/user'
 import {
   setToken,
@@ -221,11 +221,45 @@ export default {
           })
       },
       handGetNotice({commit},
-                    {userId}
+                    {userId,sendPage}
       ) {
           return new Promise((resolve, reject) => {
               getNotice(
-                  {userId}
+                  {userId,sendPage}
+              ).then(res => {
+                  const data = res.data;
+                  if (data.status === 1) {} else {
+                      // commit('setToken', data.data.jurisdiction)
+                  }
+                  resolve(data);
+              }).catch(err => {
+                  reject(err)
+              })
+          })
+      },
+      handReadNotice({commit},
+                    {id,}
+      ) {
+          return new Promise((resolve, reject) => {
+              readNotice(
+                  {id,}
+              ).then(res => {
+                  const data = res.data;
+                  if (data.status === 1) {} else {
+                      // commit('setToken', data.data.jurisdiction)
+                  }
+                  resolve(data);
+              }).catch(err => {
+                  reject(err)
+              })
+          })
+      },
+      handReadEdNotice({commit},
+                    {userId,sendPage}
+      ) {
+          return new Promise((resolve, reject) => {
+              readEdNotice(
+                  {userId,sendPage}
               ).then(res => {
                   const data = res.data;
                   if (data.status === 1) {} else {
@@ -268,7 +302,6 @@ export default {
     }) {
       return new Promise((resolve, reject) => {
         // commit('setAvator', 'http://www.dmsen.cn/static/ali_index_files/img/pictou.jpg')
-        // commit('setAvator', 'http://www.dmsen.cn/static/ali_index_files/img/pic2.jpg')
         commit('setAvator',   state.avatorImgPath);
         commit('setAccess', [state.token].map(Number));
         commit('setHasGetInfo', true);
