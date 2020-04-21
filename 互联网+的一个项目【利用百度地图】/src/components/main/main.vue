@@ -67,12 +67,12 @@
            <a href="#" @click="showBadgeModal"> <Icon type="ios-notifications-outline" size="26"></Icon></a>
           </Badge>
           <user :user-avator="userAvator" />
-          <language
-            v-if="$config.useI18n"
-            @on-lang-change="setLocal"
-            style="margin-right: 10px;"
-            :lang="local"
-          />
+          <!--<language-->
+            <!--v-if="$config.useI18n"-->
+            <!--@on-lang-change="setLocal"-->
+            <!--style="margin-right: 10px;"-->
+            <!--:lang="local"-->
+          <!--/>-->
           <error-store
             v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader"
             :has-read="hasReadErrorPage"
@@ -119,7 +119,7 @@ import TagsNav from "./components/tags-nav";
 import User from "./components/user";
 import ABackTop from "./components/a-back-top";
 import Fullscreen from "./components/fullscreen";
-import Language from "./components/language";
+// import Language from "./components/language";
 import ErrorStore from "./components/error-store";
 import { mapMutations, mapActions, mapGetters } from "vuex";
 import { getNewTagList, getNextRoute, routeEqual } from "@/libs/util";
@@ -127,14 +127,14 @@ import minLogo from "@/assets/images/lin.png";
 import maxLogo from "@/assets/images/lin_max_log.png";
 import "./main.less";
 import Tables from "_c/tables";
-import { Message } from "iview";
+import { Message } from "view-design";
 export default {
   name: "Main",
   components: {
     Tables,
     SideMenu,
     HeaderBar,
-    Language,
+
     TagsNav,
     Fullscreen,
     ErrorStore,

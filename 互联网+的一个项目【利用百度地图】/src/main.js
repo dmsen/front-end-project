@@ -4,8 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
-import iView from 'iview'
-import i18n from '@/locale'
+// import i18n from '@/locale'
 import config from '@/config'
 import importDirective from '@/directive'
 import installPlugin from '@/plugin'
@@ -16,6 +15,13 @@ import VueParticles from 'vue-particles'
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 
+import ViewUI from 'view-design';
+// import style
+import 'view-design/dist/styles/iview.css';
+
+Vue.use(ViewUI);
+
+
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
@@ -25,9 +31,11 @@ import './theme/dark.less'
 // require('@/theme/dark.less')
 Vue.use(VueParticles);
 
-Vue.use(iView, {
-  i18n: (key, value) => i18n.t(key, value)
-});
+// Vue.use(ViewUI, {
+//   i18n: (key, value) => i18n.t(key, value)
+// });
+
+
 /**
  * @description 注册admin内置插件
  */
@@ -51,7 +59,7 @@ importDirective(Vue);
 new Vue({
   el: '#app',
   router,
-  i18n,
+
   store,
   render: h => h(App)
 })

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {
   Message
-} from "iview";
+} from "view-design";
 var scene, camera, renderer, light, geometry, material, cube;
 //主函数
 export function magicCube(id) {

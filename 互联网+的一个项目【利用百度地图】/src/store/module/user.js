@@ -14,7 +14,7 @@ import {
 } from '@/libs/util'
 import {
   Message
-} from 'iview'
+} from 'view-design'
 import {
   errMessage
 } from '@/api/index'

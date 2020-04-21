@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '@/store'
 import {
   Spin
-} from 'iview'
+} from 'view-design'
 const addErrorLog = errorInfo => {
   const {
     statusText,
